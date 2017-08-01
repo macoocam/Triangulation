@@ -11,11 +11,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <CheckBox
-        android:id="@+id/Ifwrite"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="writeFile?" />
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/loop"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:text="Loop?" />
+
+        <CheckBox
+            android:id="@+id/Ifwrite"
+            android:layout_width="109dp"
+            android:layout_height="wrap_content"
+            android:text="WriteFile?" />
+    </LinearLayout>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
@@ -253,14 +265,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/infoContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <View
                 android:id="@+id/lowerSepparator"
@@ -281,7 +293,7 @@
             android:layout_height="match_parent"
             android:layout_above="@id/infoContainer"
             android:layout_alignParentTop="true"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ListView
                 android:id="@android:id/list"

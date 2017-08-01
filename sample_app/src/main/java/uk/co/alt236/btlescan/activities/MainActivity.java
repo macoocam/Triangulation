@@ -10,6 +10,9 @@ import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -73,12 +76,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Bind(R.id.ed_realy)
     protected EditText mrealy;
 
+
     @Bind(R.id.bt_calculate)
     protected Button mcalculate;
     @Bind(R.id.receive_bt)
     protected ToggleButton receive;
     @Bind(R.id.Ifwrite)
     protected CheckBox Ifwrite;
+    @Bind(R.id.loop)
+    protected CheckBox loopChk;
 
 //    @Bind(R.id.btle_View)
 //    protected RelativeLayout drawV;
@@ -116,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BluetoothLeScanner mScanner;
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothLeDeviceStore mDeviceStore;
+
+    private Handler handler;
+    private HandlerThread handlerThread;
 
     private final BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
@@ -176,6 +185,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBluetoothUtils = new BluetoothUtils(this);
         mScanner = new BluetoothLeScanner(mLeScanCallback, mBluetoothUtils);
         updateItemCount(0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handlerThread != null) {
+            handlerThread.quit();
+        }
+        if (handler != null) {
+            handler.removeCallbacks(r1);
+        }
     }
 
     @Override
@@ -377,10 +397,77 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    int temp = 0;
+    private Runnable r1 = new Runnable() {
+        @Override
+        public void run() {
+            if (temp < COUNT) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        receive.setText(temp + "");
+                    }
+                });
+                temp++;
+            } else {
+                temp = 0;
+                separateBeacon();//初始化
+                positioning();//定位
+
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+                manger.notify(1, notification);
+                cleanCountObj();
+
+                wtdArray = null;
+                wtdArray = new ArrayList<WriteFileData>();
+                calculation = new Calculation();
+            }
+            handler.postDelayed(this, 1000);
+        }
+    };
+
+    private Runnable r2 = new Runnable() {
+        @Override
+        public void run() {
+            if (COUNT > 1) {
+                COUNT--;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        receive.setText(Integer.toString(COUNT));
+                    }
+                });
+            } else {
+                separateBeacon();//初始化
+                positioning();//定位
+
+                if (Ifwrite.isChecked()) {//是否寫檔
+                    writeFile();
+                }
+                //-------嗶生提醒量測完畢
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+                //-------------------------------------------
+                running = false;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        receive.setChecked(false);
+                        receive.setText(mSetTime.getText().toString());
+                    }
+                });
+                manger.notify(1, notification);
+                cleanCountObj();
+                handler.sendEmptyMessage(2);
+            }
+            handler.postDelayed(this, 1000);
+        }
+    };
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.bt_calculate:
                 if (!mrealx.getText().toString().equals("") && !mrealy.getText().toString().equals("") && calculation != null) {
                     double tmp = Math.sqrt(Math.pow(Double.parseDouble(mrealx.getText().toString()) - calculation.X, 2) + Math.pow(Double.parseDouble(mrealy.getText().toString()) - calculation.Y, 2));
@@ -398,19 +485,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.receive_bt:
                 if (receive.isChecked()) {
-                    drawView.draw = false;
-                    COUNT = Integer.parseInt(mSetTime.getText().toString());
-                    receive.setText(Integer.toString(COUNT));
+                    wtdArray = null;
+                    wtdArray = new ArrayList<WriteFileData>();
+                    calculation = new Calculation();
+
+                    if (!running) {
+                        running = true;
+
+                        handlerThread = new HandlerThread("positionworker");
+                        handlerThread.start();
+                        handler = new Handler(handlerThread.getLooper()) {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                super.handleMessage(msg);
+                                switch (msg.what) {
+                                    case 1:
+                                        handler.removeCallbacks(r1);
+                                        break;
+                                    case 2:
+                                        handler.removeCallbacks(r2);
+                                        break;
+                                }
+                            }
+                        };
+
+                        COUNT = Integer.parseInt(mSetTime.getText().toString());
+
+                        if (loopChk.isChecked()) {//持續定位
+                            handler.post(r1);
+                        } else {//一次定位
+                            receive.setText(COUNT + "");
+                            handler.postDelayed(r2, 1000);
+                        }
+                    }
+                } else {
+                    if (loopChk.isChecked()) {
+                        handler.sendEmptyMessage(1);
+                    }
+                    handlerThread.quit();
+                    receive.setChecked(false);
+                    running = false;
+                    temp = 0;
+                }
+/*
+                if (receive.isChecked() && !loopChk.isChecked()) {//不持續定位檢查有無要寫檔
+//                    drawView.draw = false;
+//                    COUNT = Integer.parseInt(mSetTime.getText().toString());
+                    //receive.setText(Integer.toString(COUNT));
                     wtdArray = null;
                     wtdArray = new ArrayList<WriteFileData>();
                     calculation = new Calculation();
                     if (!running) {
-
                         running = true;
-
-
                         timer = new CountDownTimer(COUNT * 1000, 1000) {
-
                             @Override
                             public void onFinish() {
                                 separateBeacon();//初始化
@@ -443,6 +570,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     receive.setText(Integer.toString(COUNT));
                     running = false;
                 }
+*/
                 break;
         }
     }
@@ -478,8 +606,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         drawView.X = 100 + calculation.X * 50;
         drawView.Y = 275 - calculation.Y * 50;
-        mestimates_x.setText(calculation.X + "");
-        mestimates_y.setText(calculation.Y + "");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mestimates_x.setText(calculation.X + "");
+                mestimates_y.setText(calculation.Y + "");
+            }
+        });
+
 
         drawView.draw = true;
     }
