@@ -256,12 +256,6 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <View
-        android:id="@+id/upperSepparator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/holo_blue_dark" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -308,5 +302,11 @@
                 android:text="@string/no_data" />
         </LinearLayout>
     </RelativeLayout>
+
+    <View
+        android:id="@+id/upperSepparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/holo_blue_dark" />
 
 </LinearLayout>
