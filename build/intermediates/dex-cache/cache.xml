@@ -2,34 +2,6 @@
 <items version="2" >
 
     <item
-        jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/exploded-aar/com.commonsware.cwac/merge/1.1.0/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="40e8bc647493f57be01c9f6fe621fe20f2f759bd">
-        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/classes-5147a76aa7f0e67678afbb6a2129bf067b633d06.jar" />
-    </item>
-    <item
-        jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
-        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/classes-03bb5a20c443ce2f73cb02f7efb3f4a4e4291913.jar" />
-    </item>
-    <item
-        jar="/Users/eason/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/7.0.1/d5d13ea991eab0252e3710e5df3d6a9d4b21d461/butterknife-7.0.1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="d5d13ea991eab0252e3710e5df3d6a9d4b21d461">
-        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/butterknife-7.0.1-720b5317e95de04d3573cbf6d84e46cadeb0a781.jar" />
-    </item>
-    <item
-        jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
-        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-cb17e0f50449cc54fe5278fad13b4d296d818a5d.jar" />
-    </item>
-    <item
         jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
@@ -44,11 +16,25 @@
         <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/classes-141d33f34c095c9fab24ced61f64b4284d5cddd4.jar" />
     </item>
     <item
-        jar="/Users/eason/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
-        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-7188f3f91c5611d3ec18925b4ebdd40cc947133f.jar" />
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-cb17e0f50449cc54fe5278fad13b4d296d818a5d.jar" />
+    </item>
+    <item
+        jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/exploded-aar/com.commonsware.cwac/merge/1.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="40e8bc647493f57be01c9f6fe621fe20f2f759bd">
+        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/classes-5147a76aa7f0e67678afbb6a2129bf067b633d06.jar" />
+    </item>
+    <item
+        jar="/Users/eason/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/7.0.1/d5d13ea991eab0252e3710e5df3d6a9d4b21d461/butterknife-7.0.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="d5d13ea991eab0252e3710e5df3d6a9d4b21d461">
+        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/butterknife-7.0.1-720b5317e95de04d3573cbf6d84e46cadeb0a781.jar" />
     </item>
     <item
         jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/libs/EasyCursor-0.1.1.jar"
@@ -58,10 +44,24 @@
         <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/EasyCursor-0.1.1-b1666e1c221ae6b2e67e45b2bfd5ccd6e96372d5.jar" />
     </item>
     <item
+        jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
+        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/classes-03bb5a20c443ce2f73cb02f7efb3f4a4e4291913.jar" />
+    </item>
+    <item
+        jar="/Users/eason/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-7188f3f91c5611d3ec18925b4ebdd40cc947133f.jar" />
+    </item>
+    <item
         jar="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/exploded-aar/Triangulation/library/unspecified/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="2483384a61fa113c1220803178a25a5cce4617a2">
+        sha1="a7d3627c5a4d5c4b3f40d405f5c782e321f7b395">
         <dex dex="/Users/eason/AndroidStudioProjects/Triangulation/sample_app/build/intermediates/pre-dexed/debug/classes-023ae5b7d6a52de377d1a5967dee1bc9b567c281.jar" />
     </item>
 

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -106,9 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public int MINOR = 0;
     private boolean running = false;
-    public int MAXbeaconNUM = -1, SubspceFingerPrint = -1, RSSISUM8Subspace = -1, chooseSubspace = -1;
-    public boolean ThresholdPass = false;
-
 
     private BluetoothUtils mBluetoothUtils;
     private BluetoothLeScanner mScanner;
@@ -158,7 +154,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME);
+        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
         mSetTime.setText(Integer.toString(COUNT));
         mcalculate.setOnClickListener(this);
         receive.setOnClickListener(this);
@@ -327,11 +324,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 separateBeacon();//初始化
                 positioning();//定位
 
-                //-------嗶生提醒量測完畢
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                //-------------------------------------------
-
                 manger.notify(1, notification);
                 cleanCountObj();
 
@@ -361,10 +353,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (Ifwrite.isChecked()) {//是否寫檔
                     writeFile();
                 }
-                //-------嗶生提醒量測完畢
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                //-------------------------------------------
 
                 running = false;
                 runOnUiThread(new Runnable() {
@@ -450,31 +438,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void positioning() {
         double[] calbeacon = {c1.getAvg(), c2.getAvg(), c3.getAvg()};
+        calculation.CustomSubspceFingerPrint(calbeacon); //整個場域的fingerprint加選子區域
 
-//			MAXbeaconNUM = calculation.calculateMAXbeacon(calbeacon); //取最大Beacon訊號值所在當選擇的子區域
-//			Log.v("p", "MAXbeaconNUM:" + MAXbeaconNUM);
-
-        SubspceFingerPrint = calculation.CustomSubspceFingerPrint(calbeacon); //整個場域的fingerprint加選子區域
-        Log.v("p", "FingerPrint:" + SubspceFingerPrint);
-
-//			ThresholdPass = calculation.calculateThreshold(MAXbeaconNUM, calbeacon);
-//			Log.v("p", "ThresholdPass:" + ThresholdPass);
-//			if (!ThresholdPass) { //
-//				RSSISUM8Subspace = calculation.calculate8SubspaceSUM(calbeacon); //計算8個子區域各個子區域的訊號值總合，取最大的為選擇的子區域
-//				 Log.v("p", "RSSISUM8Subspace:" + RSSISUM8Subspace);
-
-//				chooseSubspace = calculation.calculateSubspace(MAXbeaconNUM, RSSISUM8Subspace, calbeacon);
-//				Log.v("p", "ChooseSubspace:" + chooseSubspace);
-
-//				calculation.calculatePosition(chooseSubspace, calbeacon);
-//				calculation.calculatePosition(SubspceFingerPrint, calbeacon); //KNN+三角定位
-//			}else{
-        calculation.setFingerPrintPosition();
-//			}
-        Log.v("p", "X:" + calculation.X + " Y:" + calculation.Y);
-
-        drawView.X = 100 + calculation.X * 50;
-        drawView.Y = 275 - calculation.Y * 50;
+//        drawView.X = 100 + calculation.X * 50;
+//        drawView.Y = 275 - calculation.Y * 50;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -482,9 +449,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mestimates_y.setText(calculation.Y + "");
             }
         });
-
-
-        drawView.draw = true;
+//        drawView.draw = true;
     }
 
     private void startScan() {

@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -256,12 +256,6 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <View
-        android:id="@+id/upperSepparator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/holo_blue_dark" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -308,5 +302,11 @@
                 android:text="@string/no_data" />
         </LinearLayout>
     </RelativeLayout>
+
+    <View
+        android:id="@+id/upperSepparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/holo_blue_dark" />
 
 </LinearLayout><!-- From: file:/Users/eason/AndroidStudioProjects/Triangulation/sample_app/src/main/res/layout/activity_main.xml -->
