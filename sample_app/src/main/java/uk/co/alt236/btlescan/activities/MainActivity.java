@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Calculation calculation;
     double Edistance;
 
-    private int COUNT = 60;
+    private int COUNT = 5;
 
     public WriteFileData mWriteFileData = new WriteFileData();
     public List<WriteFileData> wtdArray = new ArrayList<WriteFileData>();
