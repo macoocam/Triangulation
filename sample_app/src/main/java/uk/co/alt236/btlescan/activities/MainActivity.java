@@ -81,20 +81,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Bind(R.id.loop)
     protected CheckBox loopChk;
 
-//    @Bind(R.id.btle_View)
-//    protected RelativeLayout drawV;
-
-    DrawView drawView;
     CountObj c1 = new CountObj(), c2 = new CountObj(), c3 = new CountObj();
 
     Calculation calculation;
-    double Edistance;
 
     private int COUNT = 5;
 
     public WriteFileData mWriteFileData = new WriteFileData();
-    public List<WriteFileData> wtdArray = new ArrayList<WriteFileData>();
-    public List<DrawObj> BArray = new ArrayList<DrawObj>();
+    public List<WriteFileData> wtdArray = new ArrayList<>();
+    public List<DrawObj> BArray = new ArrayList<>();
 
     public static SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH-mm", Locale.TAIWAN);
     private final static String FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/positioning";
@@ -156,24 +151,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ButterKnife.bind(this);
         ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME);
         toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-        mSetTime.setText(Integer.toString(COUNT));
+        mSetTime.setText(COUNT + "");
         mcalculate.setOnClickListener(this);
         receive.setOnClickListener(this);
-        receive.setText(Integer.toString(COUNT));
+        receive.setText(COUNT + "");
 
         manger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notification = new Notification();
         notification.defaults = Notification.DEFAULT_SOUND;
-
-        drawView = new DrawView(this);
-//        drawV.addView(drawView);
-        BArray = drawView.BeaconArray;
 
         mList.setEmptyView(mEmpty);
         mDeviceStore = new BluetoothLeDeviceStore();
         mBluetoothUtils = new BluetoothUtils(this);
         mScanner = new BluetoothLeScanner(mLeScanCallback, mBluetoothUtils);
         updateItemCount(0);
+        startScan();
     }
 
     @Override
@@ -215,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        receive.setText(Integer.toString(COUNT));
+        receive.setText(COUNT + "");
         invalidateOptionsMenu();
     }
 
@@ -311,6 +303,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Runnable r1 = new Runnable() {
         @Override
         public void run() {
+            if (temp == 0) {
+                calculation = new Calculation();
+            }
             if (temp < COUNT) {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -328,8 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 cleanCountObj();
 
                 wtdArray = null;
-                wtdArray = new ArrayList<WriteFileData>();
-                calculation = new Calculation();
+                wtdArray = new ArrayList<>();
             }
             handler.postDelayed(this, 1000);
         }
@@ -343,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        receive.setText(Integer.toString(COUNT));
+                        receive.setText(COUNT + "");
                     }
                 });
             } else {
@@ -375,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.bt_calculate:
                 if (!mrealx.getText().toString().equals("") && !mrealy.getText().toString().equals("") && calculation != null) {
-                    double tmp = Math.sqrt(Math.pow(Double.parseDouble(mrealx.getText().toString()) - calculation.X, 2) + Math.pow(Double.parseDouble(mrealy.getText().toString()) - calculation.Y, 2));
+                    double tmp = Math.sqrt(Math.pow(Double.parseDouble(mrealx.getText().toString()) - calculation.getX(), 2) + Math.pow(Double.parseDouble(mrealy.getText().toString()) - calculation.getY(), 2));
                     if (tmp == 0) {
                         merrord.setText(0.1 + "");
                     } else {
@@ -391,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.receive_bt:
                 if (receive.isChecked()) {
                     wtdArray = null;
-                    wtdArray = new ArrayList<WriteFileData>();
+                    wtdArray = new ArrayList<>();
                     calculation = new Calculation();
 
                     if (!running) {
@@ -440,16 +434,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         double[] calbeacon = {c1.getAvg(), c2.getAvg(), c3.getAvg()};
         calculation.CustomSubspceFingerPrint(calbeacon); //整個場域的fingerprint加選子區域
 
-//        drawView.X = 100 + calculation.X * 50;
-//        drawView.Y = 275 - calculation.Y * 50;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mestimates_x.setText(calculation.X + "");
-                mestimates_y.setText(calculation.Y + "");
+                mestimates_x.setText(calculation.getX() + "");
+                mestimates_y.setText(calculation.getY() + "");
             }
         });
-//        drawView.draw = true;
     }
 
     private void startScan() {

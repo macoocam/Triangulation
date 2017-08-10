@@ -1,56 +1,56 @@
 package uk.co.alt236.btlescan.util;
 
-/**
- * Created by Lambert on 2016/8/12.
- */
-import java.util.ArrayList;
+import android.util.Log;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 
 public class Calculation {
 
-    public double X = 0, Y = 0, sum;
+    private double X = 0, Y = 0, sum = 0;
 
-    class Point {
-        double X, Y;
+    public double getX() {
+        return X;
+    }
 
-        public Point(double x, double y) {
+    public double getY() {
+        return Y;
+    }
+
+    public double getSum() {
+        return sum;
+    }
+
+    private class Point {
+        double X, Y, Weight;
+
+        private Point(double x, double y, double weight) {
             X = x;
             Y = y;
+            Weight = weight;
         }
     }
 
     public void CustomSubspceFingerPrint(double[] calbeacon) {
         // TODO Auto-generated method stub
-        ArrayList<Calculation> tmp = new ArrayList<Calculation>();
+        ArrayList<Calculation> tmp = new ArrayList<>();
         Calculation c;
         DataBase db = new DataBase();
         double[][] testlist = db.getArray();
         for (int i = 0; i < testlist.length; i++) {//和資料的點計算間距
             c = new Calculation();
             for (int j = 0; j < calbeacon.length; j++) {
-                c.sum += Math.sqrt(Math.pow(testlist[i][j] - calbeacon[j], 2));
+                c.sum = c.sum + Math.pow(testlist[i][j] - calbeacon[j], 2);
                 c.X = i / 5;
                 c.Y = i % 5;
             }
+            c.sum = Math.sqrt(c.sum);//歐幾里德距離
             tmp.add(c);
-            c = null;
         }
 
-//        for (int j = 0; j < tmp.size(); j++) {//從最短距離計算最接近的點
-//            if (min > tmp.get(j).sum) {
-//                min = tmp.get(j).sum;
-//                temp = j;
-//            }
-//        }
-//
-//        X = temp / 5;//轉換成座標
-//        Y = temp % 5;
-//        Log.v("ptest", "FingerPrint(" + X + ", " + Y + ")");
-
-
-        ArrayList<Point> nearP = new ArrayList<Point>();//離定位點的最近四點4NN
-        for (int i = 0; i < 4; i++) {
+        ArrayList<Point> nearP = new ArrayList<>();//離定位點的最近四點
+        for (int i = 0; i < 4; i++) {//4NN
             double min = 100;//初始化
             int temp = 0;
             for (int j = 0; j < tmp.size(); j++) {
@@ -59,17 +59,27 @@ public class Calculation {
                     temp = j;
                 }
             }
-            Point P = new Point(tmp.get(temp).X, tmp.get(temp).Y);
+            Point P = new Point(tmp.get(temp).X, tmp.get(temp).Y, tmp.get(temp).sum);
+            Log.d("asd", tmp.get(temp).X + " " + tmp.get(temp).Y + " " + tmp.get(temp).sum);
             nearP.add(P);
             tmp.remove(temp);
         }
 
-        for (int i = 0; i < nearP.size(); i++) {
-            X = X + nearP.get(i).X;
-            Y = Y + nearP.get(i).Y;
+        for (int i = 0; i < nearP.size(); i++) {//總權重
+            sum = sum + 1 / (nearP.get(i).Weight * nearP.get(i).Weight);
         }
-        X = X / nearP.size();
-        Y = Y / nearP.size();
+        Log.d("asd", sum + "");
+
+        for (int i = 0; i < nearP.size(); i++) {
+            Log.d("PP", nearP.get(i).X + " " + nearP.get(i).Y);//距離定位點最近的四點
+            Log.d("PP", (1 / (nearP.get(i).Weight * nearP.get(i).Weight)) / sum + "");
+            X = X + nearP.get(i).X * ((1 / (nearP.get(i).Weight * nearP.get(i).Weight)) / sum);//每點權重分量加權
+            Y = Y + nearP.get(i).Y * ((1 / (nearP.get(i).Weight * nearP.get(i).Weight)) / sum);
+        }
+
+        DecimalFormat df = new DecimalFormat("#.##");//小數點後兩位
+        X = Double.parseDouble(df.format(X));
+        Y = Double.parseDouble(df.format(Y));
     }
 }
 
