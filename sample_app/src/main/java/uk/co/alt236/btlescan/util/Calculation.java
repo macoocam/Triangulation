@@ -18,10 +18,6 @@ public class Calculation {
         return Y;
     }
 
-    public double getSum() {
-        return sum;
-    }
-
     private class Point {
         double X, Y, Weight;
 
